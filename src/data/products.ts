@@ -121,13 +121,13 @@ export const products: Product[] = [
     badge: "new"
   },
   
-  // Acessórios
+  // Insumos
   {
     id: "ac-1",
     name: "Cânulas 25G x 50mm",
     description: "Caixa com 20 unidades - ponta flexível",
     price: 120.00,
-    category: "acessorios",
+    category: "insumos",
     image: "/placeholder.svg"
   },
   {
@@ -135,7 +135,7 @@ export const products: Product[] = [
     name: "Cânulas 27G x 40mm",
     description: "Caixa com 20 unidades - ultra finas",
     price: 130.00,
-    category: "acessorios",
+    category: "insumos",
     image: "/placeholder.svg"
   },
   {
@@ -143,7 +143,7 @@ export const products: Product[] = [
     name: "Agulhas 30G x 13mm",
     description: "Caixa com 100 unidades",
     price: 45.00,
-    category: "acessorios",
+    category: "insumos",
     image: "/placeholder.svg"
   },
   {
@@ -151,7 +151,7 @@ export const products: Product[] = [
     name: "Anestésico Lidocaína 2%",
     description: "Frasco 20ml com vasoconstritor",
     price: 35.00,
-    category: "acessorios",
+    category: "insumos",
     image: "/placeholder.svg"
   },
   {
@@ -159,15 +159,15 @@ export const products: Product[] = [
     name: "Pomada Anestésica EMLA",
     description: "Bisnaga 30g - Lidocaína + Prilocaína",
     price: 85.00,
-    category: "acessorios",
+    category: "insumos",
     image: "/placeholder.svg"
   }
 ];
 
 export const categoryLabels: Record<string, string> = {
   preenchedores: "Preenchedores",
-  toxinas: "Toxinas",
+  toxinas: "Toxina Botulínica",
   fios: "Fios de PDO",
   bioestimuladores: "Bioestimuladores",
-  acessorios: "Acessórios"
+  insumos: "Insumos"
 };

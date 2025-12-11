@@ -1,6 +1,20 @@
 import { Instagram, MessageCircle, Mail, MapPin, Phone } from "lucide-react";
+import { useAdmin } from "@/contexts/AdminContext";
 
 export function Footer() {
+  const { settings } = useAdmin();
+
+  // Format phone for display: 5511999999999 -> (11) 99999-9999
+  const formatPhoneDisplay = (number: string) => {
+    const digits = number.replace(/\D/g, "");
+    if (digits.length < 4) return digits;
+    // Remove country code (55) if present
+    const phone = digits.startsWith("55") ? digits.slice(2) : digits;
+    if (phone.length <= 2) return `(${phone}`;
+    if (phone.length <= 7) return `(${phone.slice(0, 2)}) ${phone.slice(2)}`;
+    return `(${phone.slice(0, 2)}) ${phone.slice(2, 7)}-${phone.slice(7, 11)}`;
+  };
+
   return (
     <footer id="contato" className="bg-primary text-primary-foreground">
       {/* About Section */}
@@ -11,10 +25,9 @@ export function Footer() {
               Sobre a <span className="text-secondary">Help HOF</span>
             </h2>
             <p className="text-primary-foreground/80 text-lg leading-relaxed">
-              Somos especializados em fornecer produtos de alta qualidade para profissionais 
-              de Harmonização Orofacial. Nossa missão é garantir que dentistas e biomédicos 
-              tenham acesso aos melhores insumos do mercado, com procedência certificada e 
-              entrega rápida em todo o Brasil.
+              Somos especializados em fornecer produtos de alta qualidade para profissionais
+              de Harmonização Orofacial. Nossa missão é garantir que profissionais da área da
+              saúde tenham acesso aos melhores produtos do mercado com agilidade e segurança.
             </p>
           </div>
         </div>
@@ -41,7 +54,7 @@ export function Footer() {
                 <Instagram className="h-5 w-5" />
               </a>
               <a
-                href={`https://wa.me/5531999999999`}
+                href={`https://wa.me/${settings.whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-whatsapp hover:text-whatsapp-foreground transition-all"
@@ -89,7 +102,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-primary-foreground/70">
                 <Phone className="h-4 w-4 text-secondary" />
-                <span>(31) 99999-9999</span>
+                <span>{formatPhoneDisplay(settings.whatsappNumber)}</span>
               </li>
               <li className="flex items-center gap-3 text-primary-foreground/70">
                 <Mail className="h-4 w-4 text-secondary" />

@@ -70,11 +70,11 @@ export function ProductCard({ product }: ProductCardProps) {
       {badgeConfig && (
         <div
           className={cn(
-            "absolute top-3 left-3 z-10 flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold",
+            "absolute top-2 left-2 z-10 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold",
             badgeConfig.className
           )}
         >
-          <badgeConfig.icon className="h-3 w-3" />
+          <badgeConfig.icon className="h-2.5 w-2.5" />
           {badgeConfig.label}
         </div>
       )}
@@ -84,33 +84,33 @@ export function ProductCard({ product }: ProductCardProps) {
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
 
-      <CardContent className="p-4">
+      <CardContent className="p-3">
         {/* Product Info */}
-        <h3 className="font-semibold text-foreground line-clamp-2 mb-1 group-hover:text-primary transition-colors">
+        <h3 className="font-semibold text-sm text-foreground line-clamp-1 mb-0.5 group-hover:text-primary transition-colors">
           {product.name}
         </h3>
-        <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+        <p className="text-xs text-muted-foreground line-clamp-1 mb-2">
           {product.description}
         </p>
 
         {/* Price and Button */}
         <div className="flex items-center justify-between gap-2">
           <div>
-            <span className="text-xl font-bold text-primary">
+            <span className="text-base font-bold text-primary">
               {formatPrice(product.price)}
             </span>
           </div>
           <Button
             size="sm"
             onClick={handleAddToCart}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground gap-1 transition-all hover:scale-105"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground gap-1 transition-all hover:scale-105 h-8 text-xs px-2"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-3.5 w-3.5" />
             Adicionar
           </Button>
         </div>

@@ -4,14 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/contexts/CartContext";
+import { useAdmin } from "@/contexts/AdminContext";
 import { useState } from "react";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
-
-const WHATSAPP_NUMBER = "5531999999999";
 
 export function CartDrawer() {
   const { items, removeItem, updateQuantity, totalPrice, isCartOpen, setIsCartOpen, clearCart } = useCart();
+  const { settings, addOrder, products } = useAdmin();
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
 
@@ -42,24 +41,32 @@ export function CartDrawer() {
       )
       .join("\n");
 
-    const message = `🛒 *Novo Pedido - Help HOF*
+    // Use custom template from settings or fallback to default
+    let message = settings.messageTemplate || `🛒 *Novo Pedido - Help HOF*
 
-*Cliente:* ${customerName}
-*Telefone:* ${customerPhone || "Não informado"}
+*Cliente:* {{cliente}}
+*Telefone:* {{telefone}}
 
 *Itens do Pedido:*
 ━━━━━━━━━━━━━━━
-${itemsList}
+{{itens}}
 ━━━━━━━━━━━━━━━
 
-💰 *Total: ${formatPrice(totalPrice)}*
+💰 *Total: {{total}}*
 
 Aguardo confirmação do pedido!`;
+
+    // Replace placeholders with actual values
+    message = message
+      .replace(/\{\{cliente\}\}/g, customerName)
+      .replace(/\{\{telefone\}\}/g, customerPhone || "Não informado")
+      .replace(/\{\{itens\}\}/g, itemsList)
+      .replace(/\{\{total\}\}/g, formatPrice(totalPrice));
 
     return encodeURIComponent(message);
   };
 
-  const handleSendOrder = () => {
+  const handleSendOrder = async () => {
     if (!customerName.trim()) {
       toast.error("Por favor, informe seu nome");
       return;
@@ -70,11 +77,47 @@ Aguardo confirmação do pedido!`;
       return;
     }
 
-    const message = generateWhatsAppMessage();
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
-    
-    window.open(whatsappUrl, "_blank");
-    toast.success("Redirecionando para o WhatsApp...");
+    // Save order to history
+    const orderItems = items.map((item) => {
+      const product = products.find((p) => p.id === item.id) || item;
+      return {
+        product: product,
+        quantity: item.quantity,
+      };
+    });
+
+    try {
+      await addOrder({
+        customerName: customerName,
+        customerPhone: customerPhone || "Não informado",
+        items: orderItems,
+        total: totalPrice,
+        status: "pending",
+      });
+
+      const message = generateWhatsAppMessage();
+      const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${message}`;
+
+      window.open(whatsappUrl, "_blank");
+      toast.success("Pedido enviado! Redirecionando para o WhatsApp...");
+
+      // Clear cart and form after sending
+      clearCart();
+      setCustomerName("");
+      setCustomerPhone("");
+      setIsCartOpen(false);
+    } catch (error) {
+      console.error("Error saving order:", error);
+      // Still open WhatsApp even if save fails
+      const message = generateWhatsAppMessage();
+      const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${message}`;
+      window.open(whatsappUrl, "_blank");
+      toast.warning("Pedido enviado, mas houve um erro ao salvar no histórico.");
+      clearCart();
+      setCustomerName("");
+      setCustomerPhone("");
+      setIsCartOpen(false);
+    }
   };
 
   if (!isCartOpen) return null;

@@ -3,7 +3,7 @@ export type ProductCategory =
   | "toxinas" 
   | "fios" 
   | "bioestimuladores" 
-  | "acessorios";
+  | "insumos";
 
 export interface Product {
   id: string;

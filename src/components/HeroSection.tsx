@@ -10,14 +10,14 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center gradient-hero overflow-hidden">
+    <section className="relative min-h-[70vh] flex items-center justify-center gradient-hero overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 w-72 h-72 bg-secondary rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent rounded-full blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-4 py-32 relative z-10">
+      <div className="container mx-auto px-4 py-16 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div 
@@ -32,7 +32,7 @@ export function HeroSection() {
 
           {/* Title */}
           <h1 
-            className="text-5xl md:text-7xl font-extrabold text-primary-foreground mb-6 animate-fade-in"
+            className="text-4xl md:text-6xl font-extrabold text-primary-foreground mb-6 animate-fade-in"
             style={{ animationDelay: "0.2s" }}
           >
             Help<span className="text-secondary">HOF</span>
@@ -43,16 +43,15 @@ export function HeroSection() {
             className="text-xl md:text-2xl text-primary-foreground/90 font-medium mb-4 animate-fade-in"
             style={{ animationDelay: "0.3s" }}
           >
-            Produtos Premium para Harmonização Orofacial
+            Produtos para Harmonização Orofacial
           </p>
 
           {/* Description */}
-          <p 
-            className="text-lg text-primary-foreground/70 max-w-2xl mx-auto mb-10 animate-fade-in"
+          <p
+            className="text-base text-primary-foreground/70 max-w-2xl mx-auto mb-10 animate-fade-in"
             style={{ animationDelay: "0.4s" }}
           >
-            Qualidade garantida, procedência certificada e entrega rápida para todo o Brasil. 
-            Tudo que você precisa para seus procedimentos estéticos em um só lugar.
+            Qualidade, procedência e agilidade: tudo que você precisa para seus procedimentos estéticos em um só lugar.
           </p>
 
           {/* CTA Button */}
@@ -72,7 +71,7 @@ export function HeroSection() {
 
           {/* Features */}
           <div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 animate-fade-in"
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 animate-fade-in"
             style={{ animationDelay: "0.6s" }}
           >
             <div className="flex items-center justify-center gap-3 text-primary-foreground/80">
@@ -95,11 +94,6 @@ export function HeroSection() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <ArrowDown className="h-6 w-6 text-primary-foreground/50" />
       </div>
     </section>
   );

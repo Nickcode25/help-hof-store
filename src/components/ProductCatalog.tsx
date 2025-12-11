@@ -3,11 +3,12 @@ import { Search, Filter, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/ProductCard";
-import { products, categoryLabels } from "@/data/products";
+import { useAdmin } from "@/contexts/AdminContext";
 import { ProductCategory } from "@/types/product";
 import { cn } from "@/lib/utils";
 
 export function ProductCatalog() {
+  const { products, categoryLabels } = useAdmin();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | "all">("all");
 
@@ -17,7 +18,7 @@ export function ProductCatalog() {
     "toxinas",
     "fios",
     "bioestimuladores",
-    "acessorios",
+    "insumos",
   ];
 
   const filteredProducts = useMemo(() => {
@@ -29,23 +30,20 @@ export function ProductCatalog() {
         selectedCategory === "all" || product.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [products, searchQuery, selectedCategory]);
 
   return (
-    <section id="produtos" className="py-16 md:py-24 bg-background">
+    <section id="produtos" className="py-10 md:py-14 bg-background">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+        <div className="text-center mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground">
             Nossos <span className="text-primary">Produtos</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Linha completa de produtos para Harmonização Orofacial com qualidade premium e procedência garantida.
-          </p>
         </div>
 
         {/* Search and Filters */}
-        <div className="mb-8 space-y-4">
+        <div className="mb-6 space-y-4">
           {/* Search Bar */}
           <div className="relative max-w-md mx-auto">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -96,7 +94,7 @@ export function ProductCatalog() {
 
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {filteredProducts.map((product, index) => (
               <div
                 key={product.id}
