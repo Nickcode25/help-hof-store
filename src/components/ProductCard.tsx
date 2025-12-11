@@ -91,24 +91,22 @@ export function ProductCard({ product }: ProductCardProps) {
 
       <CardContent className="p-3">
         {/* Product Info */}
-        <h3 className="font-semibold text-sm text-foreground line-clamp-1 mb-0.5 group-hover:text-primary transition-colors">
+        <h3 className="font-semibold text-sm text-foreground mb-1 group-hover:text-primary transition-colors leading-tight">
           {product.name}
         </h3>
-        <p className="text-xs text-muted-foreground line-clamp-1 mb-2">
+        <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
           {product.description}
         </p>
 
         {/* Price and Button */}
-        <div className="flex items-center justify-between gap-2">
-          <div>
-            <span className="text-base font-bold text-primary">
-              {formatPrice(product.price)}
-            </span>
-          </div>
+        <div className="flex flex-col gap-2">
+          <span className="text-base font-bold text-primary">
+            {formatPrice(product.price)}
+          </span>
           <Button
             size="sm"
             onClick={handleAddToCart}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground gap-1 transition-all hover:scale-105 h-8 text-xs px-2"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground gap-1 transition-all hover:scale-105 h-8 text-xs px-2"
           >
             <Plus className="h-3.5 w-3.5" />
             Adicionar

@@ -42,7 +42,7 @@ export function Footer() {
               Help<span className="text-secondary">HOF</span>
             </h3>
             <p className="text-primary-foreground/70 mb-6">
-              Produtos premium para Harmonização Orofacial com qualidade e procedência garantidas.
+              Produtos para Harmonização Orofacial com qualidade e procedência garantidas.
             </p>
             <div className="flex gap-4">
               <a

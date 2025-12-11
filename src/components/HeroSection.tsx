@@ -1,4 +1,4 @@
-import { ArrowDown, Shield, Truck, Award } from "lucide-react";
+import { ArrowDown, Shield, Package, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function HeroSection() {
@@ -10,14 +10,14 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center gradient-hero overflow-hidden">
+    <section className="relative flex items-center justify-center gradient-hero overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 w-72 h-72 bg-secondary rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent rounded-full blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-4 py-16 relative z-10">
+      <div className="container mx-auto px-4 pt-20 pb-12 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div 
@@ -71,7 +71,7 @@ export function HeroSection() {
 
           {/* Features */}
           <div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 animate-fade-in"
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 animate-fade-in"
             style={{ animationDelay: "0.6s" }}
           >
             <div className="flex items-center justify-center gap-3 text-primary-foreground/80">
@@ -82,9 +82,9 @@ export function HeroSection() {
             </div>
             <div className="flex items-center justify-center gap-3 text-primary-foreground/80">
               <div className="p-3 rounded-full bg-primary-foreground/10">
-                <Truck className="h-6 w-6 text-secondary" />
+                <Package className="h-6 w-6 text-secondary" />
               </div>
-              <span className="font-medium">Entrega Rápida</span>
+              <span className="font-medium">Pronta Entrega</span>
             </div>
             <div className="flex items-center justify-center gap-3 text-primary-foreground/80">
               <div className="p-3 rounded-full bg-primary-foreground/10">
