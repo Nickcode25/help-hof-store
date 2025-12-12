@@ -1,4 +1,4 @@
-import { Plus, Star, Sparkles, Tag } from "lucide-react";
+import { Plus, Star, Sparkles, Tag, PackageX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Product } from "@/types/product";
@@ -59,16 +59,19 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   const badgeConfig = product.badge ? getBadgeConfig(product.badge) : null;
+  const isAvailable = product.available !== false;
 
   return (
-    <Card 
+    <Card
       className={cn(
-        "group relative overflow-hidden bg-card border-border shadow-card transition-all duration-300 hover:shadow-elevated hover:-translate-y-1",
-        isAnimating && "scale-95"
+        "group relative overflow-hidden bg-card border-border shadow-card transition-all duration-300",
+        isAvailable && "hover:shadow-elevated hover:-translate-y-1",
+        isAnimating && "scale-95",
+        !isAvailable && "opacity-70"
       )}
     >
       {/* Badge */}
-      {badgeConfig && (
+      {badgeConfig && isAvailable && (
         <div
           className={cn(
             "absolute top-2 left-2 z-10 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold",
@@ -85,14 +88,31 @@ export function ProductCard({ product }: ProductCardProps) {
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+          className={cn(
+            "w-full h-full object-contain transition-transform duration-500",
+            isAvailable && "group-hover:scale-110",
+            !isAvailable && "grayscale"
+          )}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+        {/* Out of stock overlay */}
+        {!isAvailable && (
+          <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
+            <div className="bg-muted/90 px-3 py-1.5 rounded-full flex items-center gap-1.5">
+              <PackageX className="h-4 w-4 text-muted-foreground" />
+              <span className="text-xs font-semibold text-muted-foreground">Fora de Estoque</span>
+            </div>
+          </div>
+        )}
       </div>
 
       <CardContent className="p-3">
         {/* Product Info */}
-        <h3 className="font-semibold text-sm text-foreground mb-1 group-hover:text-primary transition-colors leading-tight">
+        <h3 className={cn(
+          "font-semibold text-sm mb-1 transition-colors leading-tight",
+          isAvailable ? "text-foreground group-hover:text-primary" : "text-muted-foreground"
+        )}>
           {product.name}
         </h3>
         <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
@@ -101,17 +121,31 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Price and Button */}
         <div className="flex flex-col gap-2">
-          <span className="text-base font-bold text-primary">
+          <span className={cn(
+            "text-base font-bold",
+            isAvailable ? "text-primary" : "text-muted-foreground"
+          )}>
             {formatPrice(product.price)}
           </span>
-          <Button
-            size="sm"
-            onClick={handleAddToCart}
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground gap-1 transition-all hover:scale-105 h-8 text-xs px-2"
-          >
-            <Plus className="h-3.5 w-3.5" />
-            Adicionar
-          </Button>
+          {isAvailable ? (
+            <Button
+              size="sm"
+              onClick={handleAddToCart}
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground gap-1 transition-all hover:scale-105 h-8 text-xs px-2"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Adicionar
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              disabled
+              className="w-full h-8 text-xs px-2 cursor-not-allowed"
+            >
+              <PackageX className="h-3.5 w-3.5 mr-1" />
+              Indisponível
+            </Button>
+          )}
         </div>
       </CardContent>
 

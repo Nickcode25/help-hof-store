@@ -30,6 +30,7 @@ interface AdminContextType {
   addProduct: (product: Omit<Product, "id">) => Promise<void>;
   updateProduct: (id: string, product: Partial<Product>) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
+  toggleProductAvailability: (id: string, available: boolean) => Promise<void>;
   orders: Order[];
   addOrder: (order: Omit<Order, "id" | "createdAt">) => Promise<void>;
   updateOrderStatus: (id: string, status: Order["status"]) => Promise<void>;
@@ -187,6 +188,20 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const toggleProductAvailability = async (id: string, available: boolean) => {
+    try {
+      await productsApi.toggleAvailability(id, available);
+      setProducts((current) =>
+        current.map((product) =>
+          product.id === id ? { ...product, available } : product
+        )
+      );
+    } catch (error) {
+      console.error("Error toggling product availability:", error);
+      throw error;
+    }
+  };
+
   const addOrder = async (order: Omit<Order, "id" | "createdAt">) => {
     try {
       const newOrder = await ordersApi.create({
@@ -312,6 +327,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         addProduct,
         updateProduct,
         deleteProduct,
+        toggleProductAvailability,
         orders,
         addOrder,
         updateOrderStatus,

@@ -59,6 +59,8 @@ import {
   Tag,
   MessageSquare,
   RotateCcw,
+  PackageX,
+  PackageCheck,
 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
@@ -79,6 +81,7 @@ export default function Admin() {
     addProduct,
     updateProduct,
     deleteProduct,
+    toggleProductAvailability,
     orders,
     updateOrderStatus,
     deleteOrder,
@@ -248,6 +251,20 @@ export default function Admin() {
         toast.error("Erro ao excluir produto");
         console.error(error);
       }
+    }
+  };
+
+  const handleToggleAvailability = async (id: string, currentAvailable: boolean) => {
+    try {
+      await toggleProductAvailability(id, !currentAvailable);
+      toast.success(
+        !currentAvailable
+          ? "Produto marcado como disponível!"
+          : "Produto marcado como indisponível!"
+      );
+    } catch (error) {
+      toast.error("Erro ao alterar disponibilidade");
+      console.error(error);
     }
   };
 
@@ -797,12 +814,13 @@ Aguardo confirmação do pedido!`;
                           <TableHead>Categoria</TableHead>
                           <TableHead>Preço</TableHead>
                           <TableHead>Badge</TableHead>
+                          <TableHead>Disponível</TableHead>
                           <TableHead className="text-right">Ações</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {products.map((product) => (
-                          <TableRow key={product.id}>
+                          <TableRow key={product.id} className={product.available === false ? "opacity-60" : ""}>
                             <TableCell className="font-medium">{product.name}</TableCell>
                             <TableCell>{categoryLabels[product.category]}</TableCell>
                             <TableCell>{formatCurrency(product.price)}</TableCell>
@@ -812,6 +830,31 @@ Aguardo confirmação do pedido!`;
                                   {badgeOptions.find((b) => b.value === product.badge)?.label}
                                 </Badge>
                               )}
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleToggleAvailability(product.id, product.available !== false)}
+                                className={cn(
+                                  "gap-1.5",
+                                  product.available === false
+                                    ? "text-destructive hover:text-destructive"
+                                    : "text-green-600 hover:text-green-700"
+                                )}
+                              >
+                                {product.available === false ? (
+                                  <>
+                                    <PackageX className="h-4 w-4" />
+                                    Indisponível
+                                  </>
+                                ) : (
+                                  <>
+                                    <PackageCheck className="h-4 w-4" />
+                                    Disponível
+                                  </>
+                                )}
+                              </Button>
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="flex justify-end gap-2">

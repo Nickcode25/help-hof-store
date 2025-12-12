@@ -13,6 +13,7 @@ export interface Product {
   category: ProductCategory;
   image: string;
   badge?: "bestseller" | "promotion" | "new";
+  available?: boolean;
 }
 
 export interface CartItem extends Product {

@@ -18,9 +18,15 @@ export async function initDatabase() {
         category VARCHAR(50) NOT NULL,
         image VARCHAR(500) DEFAULT '/placeholder.svg',
         badge VARCHAR(20),
+        available BOOLEAN DEFAULT true,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `;
+
+    // Add available column if it doesn't exist (for existing tables)
+    await sql`
+      ALTER TABLE products ADD COLUMN IF NOT EXISTS available BOOLEAN DEFAULT true
     `;
 
     // Create orders table
@@ -121,7 +127,8 @@ export const productsApi = {
         price: parseFloat(p.price),
         category: p.category,
         image: p.image,
-        badge: p.badge || undefined
+        badge: p.badge || undefined,
+        available: p.available !== false
       }));
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -136,14 +143,15 @@ export const productsApi = {
     category: string;
     image?: string;
     badge?: string;
+    available?: boolean;
   }) {
     try {
       const id = `prod-${Date.now()}`;
       await sql`
-        INSERT INTO products (id, name, description, price, category, image, badge)
-        VALUES (${id}, ${product.name}, ${product.description}, ${product.price}, ${product.category}, ${product.image || '/placeholder.svg'}, ${product.badge || null})
+        INSERT INTO products (id, name, description, price, category, image, badge, available)
+        VALUES (${id}, ${product.name}, ${product.description}, ${product.price}, ${product.category}, ${product.image || '/placeholder.svg'}, ${product.badge || null}, ${product.available !== false})
       `;
-      return { id, ...product, image: product.image || '/placeholder.svg' };
+      return { id, ...product, image: product.image || '/placeholder.svg', available: product.available !== false };
     } catch (error) {
       console.error('Error creating product:', error);
       throw error;
@@ -157,6 +165,7 @@ export const productsApi = {
     category?: string;
     image?: string;
     badge?: string | null;
+    available?: boolean;
   }) {
     try {
       await sql`
@@ -167,12 +176,28 @@ export const productsApi = {
             category = COALESCE(${updates.category}, category),
             image = COALESCE(${updates.image}, image),
             badge = ${updates.badge},
+            available = COALESCE(${updates.available}, available),
             updated_at = CURRENT_TIMESTAMP
         WHERE id = ${id}
       `;
       return true;
     } catch (error) {
       console.error('Error updating product:', error);
+      throw error;
+    }
+  },
+
+  async toggleAvailability(id: string, available: boolean) {
+    try {
+      await sql`
+        UPDATE products
+        SET available = ${available},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+      `;
+      return true;
+    } catch (error) {
+      console.error('Error toggling product availability:', error);
       throw error;
     }
   },
