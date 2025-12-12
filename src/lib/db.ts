@@ -119,7 +119,7 @@ Aguardo confirmação do pedido!')
 export const productsApi = {
   async getAll() {
     try {
-      const products = await sql`SELECT * FROM products ORDER BY created_at DESC`;
+      const products = await sql`SELECT * FROM products ORDER BY name ASC`;
       return products.map(p => ({
         id: p.id,
         name: p.name,
