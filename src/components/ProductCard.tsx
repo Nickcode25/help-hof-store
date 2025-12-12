@@ -21,6 +21,7 @@ export function ProductCard({ product }: ProductCardProps) {
     toast.success(`${product.name} adicionado ao carrinho!`, {
       description: `R$ ${product.price.toFixed(2).replace(".", ",")}`,
       position: "bottom-right",
+      duration: 1000,
     });
     setTimeout(() => setIsAnimating(false), 600);
   };
