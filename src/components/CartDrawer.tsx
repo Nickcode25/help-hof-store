@@ -86,6 +86,21 @@ Aguardo confirmação do pedido!`;
       };
     });
 
+    const sanitizePhone = (phone: string) => phone.replace(/\D/g, "");
+    const whatsappNumber = sanitizePhone(settings.whatsappNumber);
+    const message = generateWhatsAppMessage();
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+
+    // Open WhatsApp immediately to avoid popup blockers and ensure "new tab" behavior works
+    const newWindow = window.open(whatsappUrl, "_blank");
+
+    // Fallback: if window.open failed (e.g. very aggressive blocker), try redirecting current tab
+    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+      window.location.href = whatsappUrl;
+    }
+
+    toast.success("Redirecionando para o WhatsApp...");
+
     try {
       await addOrder({
         customerName: customerName,
@@ -94,30 +109,17 @@ Aguardo confirmação do pedido!`;
         total: totalPrice,
         status: "pending",
       });
-
-      const message = generateWhatsAppMessage();
-      const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${message}`;
-
-      window.open(whatsappUrl, "_blank");
-      toast.success("Pedido enviado! Redirecionando para o WhatsApp...");
-
-      // Clear cart and form after sending
-      clearCart();
-      setCustomerName("");
-      setCustomerPhone("");
-      setIsCartOpen(false);
+      console.log("Order saved to history");
     } catch (error) {
       console.error("Error saving order:", error);
-      // Still open WhatsApp even if save fails
-      const message = generateWhatsAppMessage();
-      const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${message}`;
-      window.open(whatsappUrl, "_blank");
       toast.warning("Pedido enviado, mas houve um erro ao salvar no histórico.");
-      clearCart();
-      setCustomerName("");
-      setCustomerPhone("");
-      setIsCartOpen(false);
     }
+
+    // Clear cart and form after sending
+    clearCart();
+    setCustomerName("");
+    setCustomerPhone("");
+    setIsCartOpen(false);
   };
 
   if (!isCartOpen) return null;
