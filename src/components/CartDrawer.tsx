@@ -77,7 +77,7 @@ Aguardo confirmação do pedido!`;
       return;
     }
 
-    // Save order to history
+    // Prepare order data first
     const orderItems = items.map((item) => {
       const product = products.find((p) => p.id === item.id) || item;
       return {
@@ -91,35 +91,35 @@ Aguardo confirmação do pedido!`;
     const message = generateWhatsAppMessage();
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
 
-    // Open WhatsApp immediately to avoid popup blockers and ensure "new tab" behavior works
-    const newWindow = window.open(whatsappUrl, "_blank");
-
-    // Fallback: if window.open failed (e.g. very aggressive blocker), try redirecting current tab
-    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-      window.location.href = whatsappUrl;
-    }
-
-    toast.success("Redirecionando para o WhatsApp...");
-
-    try {
-      await addOrder({
-        customerName: customerName,
-        customerPhone: customerPhone || "Não informado",
-        items: orderItems,
-        total: totalPrice,
-        status: "pending",
-      });
-      console.log("Order saved to history");
-    } catch (error) {
-      console.error("Error saving order:", error);
-      toast.warning("Pedido enviado, mas houve um erro ao salvar no histórico.");
-    }
-
-    // Clear cart and form after sending
+    // 1. Optimistic UI Update: Clear immediately so user sees action taken
     clearCart();
     setCustomerName("");
     setCustomerPhone("");
     setIsCartOpen(false);
+    toast.success("Redirecionando para o WhatsApp...");
+
+    // 2. Fire and forget save (don't block redirect)
+    addOrder({
+      customerName: customerName,
+      customerPhone: customerPhone || "Não informado",
+      items: orderItems,
+      total: totalPrice,
+      status: "pending",
+    })
+      .then(() => console.log("Order saved successfully"))
+      .catch((err) => console.error("Failed to save order in background", err));
+
+    // 3. Redirect immediately
+    const newWindow = window.open(whatsappUrl, "_blank");
+    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+      window.location.href = whatsappUrl;
+    }
+
+    // 4. Force reload to ensure fresh state when user returns
+    // The timeout allows the redirect to happen first
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   if (!isCartOpen) return null;
