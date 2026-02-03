@@ -56,7 +56,7 @@ export function HeroSection() {
 
           {/* CTA Button */}
           <div 
-            className="animate-fade-in"
+            className="animate-fade-in flex flex-col items-center gap-4"
             style={{ animationDelay: "0.5s" }}
           >
             <Button
@@ -67,6 +67,9 @@ export function HeroSection() {
               Ver Produtos
               <ArrowDown className="ml-2 h-5 w-5 animate-bounce" />
             </Button>
+            <p className="text-primary-foreground/90 font-medium">
+              Pagamento via PIX ou Dinheiro
+            </p>
           </div>
 
           {/* Features */}
