@@ -8,7 +8,7 @@ export const products: Product[] = [
     description: "Preenchedor de alta densidade para volumização facial",
     price: 890.00,
     category: "preenchedores",
-    image: "/placeholder.svg",
+    image: "https://Help-HOF.b-cdn.net/Juvederm%20-%20Ultra%20Plus%20XC.png",
     badge: "bestseller"
   },
   {
@@ -25,7 +25,7 @@ export const products: Product[] = [
     description: "Textura suave para áreas delicadas",
     price: 680.00,
     category: "preenchedores",
-    image: "/placeholder.svg",
+    image: "https://Help-HOF.b-cdn.net/Belotero%20-%20Intense.png",
     badge: "new"
   },
   {
@@ -54,7 +54,7 @@ export const products: Product[] = [
     description: "500U - Difusão controlada para resultados naturais",
     price: 580.00,
     category: "toxinas",
-    image: "/placeholder.svg"
+    image: "https://Help-HOF.b-cdn.net/Galderma%20-%20Dysport%20500U.png"
   },
   {
     id: "tx-3",
@@ -100,7 +100,7 @@ export const products: Product[] = [
     description: "Bioestimulador de colágeno - 2 frascos",
     price: 2800.00,
     category: "bioestimuladores",
-    image: "/placeholder.svg",
+    image: "https://Help-HOF.b-cdn.net/Galderma%20-%20Sculptra.png",
     badge: "bestseller"
   },
   {
@@ -109,7 +109,7 @@ export const products: Product[] = [
     description: "Preenchedor e bioestimulador 1.5ml",
     price: 1600.00,
     category: "bioestimuladores",
-    image: "/placeholder.svg"
+    image: "https://Help-HOF.b-cdn.net/Merz%20-%20Radiesse.png"
   },
   {
     id: "bio-3",
@@ -128,7 +128,7 @@ export const products: Product[] = [
     description: "Caixa com 20 unidades - ponta flexível",
     price: 120.00,
     category: "insumos",
-    image: "/placeholder.svg"
+    image: "https://Help-HOF.b-cdn.net/Cânula.png"
   },
   {
     id: "ac-2",
@@ -152,7 +152,7 @@ export const products: Product[] = [
     description: "Frasco 20ml com vasoconstritor",
     price: 35.00,
     category: "insumos",
-    image: "/placeholder.svg"
+    image: "https://Help-HOF.b-cdn.net/Biometil%20-%20Anestésico.png"
   },
   {
     id: "ac-5",

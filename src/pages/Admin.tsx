@@ -61,6 +61,7 @@ import {
   RotateCcw,
   PackageX,
   PackageCheck,
+  Upload,
 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
@@ -110,6 +111,7 @@ export default function Admin() {
     badge: "none",
   });
   const [priceDisplay, setPriceDisplay] = useState("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsappNumber);
   const [whatsappDisplay, setWhatsappDisplay] = useState("");
@@ -169,6 +171,43 @@ export default function Admin() {
     const number = parseInt(digits, 10) / 100;
     setProductForm({ ...productForm, price: number.toString() });
     setPriceDisplay(formatPriceDisplay(digits));
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Por favor, selecione apenas imagens válidas");
+      return;
+    }
+
+    setIsUploadingImage(true);
+    try {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'x-filename': file.name,
+        },
+        body: file
+      });
+      
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("Imagem enviada com sucesso!");
+        setProductForm(prev => ({ ...prev, image: data.url }));
+      } else {
+        toast.error("Erro no envio: " + (data.error || "Desconhecido"));
+        console.error(data.error);
+      }
+    } catch (error) {
+      toast.error("Erro ao conectar-se com o servidor");
+      console.error(error);
+    } finally {
+      setIsUploadingImage(false);
+      e.target.value = "";
+    }
   };
 
   // Update local state when settings change
@@ -714,15 +753,35 @@ Aguardo confirmação do pedido!`;
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="image">URL da Imagem</Label>
-                        <Input
-                          id="image"
-                          value={productForm.image}
-                          onChange={(e) =>
-                            setProductForm({ ...productForm, image: e.target.value })
-                          }
-                          placeholder="https://seu-cdn.b-cdn.net/imagem.jpg"
-                          disabled={isSaving}
-                        />
+                        <div className="flex gap-2">
+                          <Input
+                            id="image"
+                            value={productForm.image}
+                            onChange={(e) =>
+                              setProductForm({ ...productForm, image: e.target.value })
+                            }
+                            placeholder="https://Help-HOF.b-cdn.net/imagem.png"
+                            disabled={isSaving || isUploadingImage}
+                          />
+                          <div className="relative">
+                            <Input
+                              type="file"
+                              id="image-upload"
+                              accept="image/*"
+                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                              onChange={handleImageUpload}
+                              disabled={isSaving || isUploadingImage}
+                              title="Fazer upload de imagem"
+                            />
+                            <Button type="button" variant="outline" disabled={isSaving || isUploadingImage} className="w-full">
+                              {isUploadingImage ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
+                              {isUploadingImage ? "Enviando..." : "Upload"}
+                            </Button>
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Cole o link direto da imagem ou faça o upload automático pelo botão acima.
+                        </p>
                         {/* Product Card Preview - identical to homepage */}
                         <div className="mt-3">
                           <p className="text-sm text-muted-foreground mb-2">Pré-visualização do card:</p>
@@ -784,7 +843,7 @@ Aguardo confirmação do pedido!`;
                           </div>
                         </div>
                       </div>
-                      <Button onClick={handleSaveProduct} className="w-full" disabled={isSaving}>
+                      <Button onClick={handleSaveProduct} className="w-full" disabled={isSaving || isUploadingImage}>
                         {isSaving ? (
                           <>
                             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
